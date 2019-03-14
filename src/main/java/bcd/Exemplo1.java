@@ -73,7 +73,10 @@ public class Exemplo1 {
         Connection conexao = DriverManager.getConnection("jdbc:sqlite:"+dbPath);
         Statement stmt = conexao.createStatement();
 
-        String email = "email@do.com";
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Insira email");
+        String email = teclado.next();
+
 
         String query = "SELECT * FROM Aluno WHERE email = '"+ email + "'";
 
