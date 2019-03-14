@@ -1,34 +1,41 @@
 package bcd;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Exemplo1 {
 
     private static final String dbPath = "src/main/resources/lab01.sqlite";
 
+    private static void inserir() throws ClassNotFoundException, SQLException {
+        String nome, email;
+        int matricula,altura, peso;
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
         Scanner teclado = new Scanner(System.in);
         //ler string
-        String s = teclado.nextLine();
-        teclado.next();//consumir caractere extra do ENTER CR/LF
+        //String s = teclado.nextLine();
+        //teclado.next();//consumir caractere extra do ENTER CR/LF
         //ler int
-        int i = teclado.nextInt();
+        //int i = teclado.nextInt();
 
+        System.out.println("Insira Matricula");
+        matricula = teclado.nextInt();
+        System.out.println("Insira Nome");
+        nome = teclado.next();
+        System.out.println("Insira Peso");
+        peso = teclado.nextInt();
+        System.out.println("Insira Altura");
+        altura = teclado.nextInt();
+        System.out.println("Insira email");
+        email = teclado.next();
 
-        System.out.println("Ola mundo!");
-
+        String teste = matricula + ", '" + nome + "', " + peso +", " + altura + ", '"+ email + "'";
         Class.forName("org.sqlite.JDBC");
-
         Connection conexao = DriverManager.getConnection("jdbc:sqlite:"+dbPath);
-
         Statement stmt = conexao.createStatement();
 
-        String query = "INSERT INTO Aluno VALUES (2,'Juca',80,180,'email@do.com')";
+        String query = "INSERT INTO Aluno VALUES(" + teste +")";
+        System.out.println(query);
 
         stmt.executeUpdate(query);
 
@@ -36,4 +43,50 @@ public class Exemplo1 {
         conexao.close();
     }
 
+    public static void listarRegistros() throws ClassNotFoundException, SQLException {
+        Class.forName("org.sqlite.JDBC");
+        Connection conexao = DriverManager.getConnection("jdbc:sqlite:"+dbPath);
+        Statement stmt = conexao.createStatement();
+
+        String query = "SELECT * FROM Aluno";
+
+        ResultSet linhas = stmt.executeQuery(query);
+        imprimir(linhas);
+
+        linhas.close();
+        stmt.close();
+        conexao.close();
+
+    }
+
+    public static void imprimir(ResultSet linhas) throws SQLException {
+        System.out.println(String.format("|%-5s|%-25s|%-25s","ID","Nome","Email"));
+        while(linhas.next()){
+            //System.out.println("Nome: " + linhas.getString("nome"));
+            System.out.println(String.format("|%-5d|%-25s|%-25s",linhas.getInt("idAluno"),linhas.getString("nome"),linhas.getString("email")));
+
+        }
+    }
+
+    public static void buscar() throws ClassNotFoundException, SQLException {
+        Class.forName("org.sqlite.JDBC");
+        Connection conexao = DriverManager.getConnection("jdbc:sqlite:"+dbPath);
+        Statement stmt = conexao.createStatement();
+
+        String email = "email@do.com";
+
+        String query = "SELECT * FROM Aluno WHERE email = '"+ email + "'";
+
+        ResultSet linhas = stmt.executeQuery(query);
+        imprimir(linhas);
+
+        linhas.close();
+        stmt.close();
+        conexao.close();
+
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        buscar();
+    }
 }
