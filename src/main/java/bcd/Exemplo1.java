@@ -18,6 +18,7 @@ public class Exemplo1 {
         //ler int
         //int i = teclado.nextInt();
 
+        // 1' OR '1'='1
         System.out.println("Insira Matricula");
         matricula = teclado.nextInt();
         System.out.println("Insira Nome");
@@ -75,8 +76,7 @@ public class Exemplo1 {
 
         Scanner teclado = new Scanner(System.in);
         System.out.println("Insira email");
-        String email = teclado.next();
-
+        String email = teclado.nextLine();
 
         String query = "SELECT * FROM Aluno WHERE email = '"+ email + "'";
 
@@ -92,4 +92,6 @@ public class Exemplo1 {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         buscar();
     }
+
+
 }
